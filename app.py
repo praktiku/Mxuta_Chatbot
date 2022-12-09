@@ -16,14 +16,14 @@ def predict():
 
     response = get_response(text)
     message = {"answer":response}
-    return jsonify(message)
+    return jsonify(message), 200,  {'content-type': 'application/json'}
 
 @app.post("/record")
 def record():
     text = request.get_json().get("message")
     response = {"answer": response}
 
-    return jsonify(message)
+    return jsonify(message), 200,  {'content-type': 'application/json'}
 
 
 if __name__ == "__main__":
