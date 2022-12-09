@@ -18,13 +18,13 @@ def predict():
     message = {"answer":response}
     return jsonify(message)
 
-@app.route("/record", methods=["POST"])
+@app.post("/record")
 def record():
     text = request.get_json().get("message")
     response = {"answer": response}
 
     return jsonify(message)
 
-    
+
 if __name__ == "__main__":
     app.run(debug=True)

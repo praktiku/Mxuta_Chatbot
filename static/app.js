@@ -73,7 +73,7 @@ class Chatbox {
             textField.value = ''
 
         }).catch((error) => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             this.updateChatText(chatbox)
             textField.value = ''
           });
