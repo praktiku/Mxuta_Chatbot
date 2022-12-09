@@ -7,7 +7,6 @@ const synth = window.speechSynthesis;
 let utter = new SpeechSynthesisUtterance();
 utter.lang = 'id-ID'
 
-
 class Chatbox {
     constructor() {
         this.args = {
@@ -140,7 +139,7 @@ class Chatbox {
         
     };
     fetchData(text, chatbox){
-        fetch('http://127.0.0.1:5000/record', {
+        fetch('/record', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -230,6 +229,8 @@ function saveBlob(blob, fileName) {
     a.click();
     window.URL.revokeObjectURL(url);
 }
-
+if(!('webkitSpeechRecognition' in window)){
+    alert('maaf browser anda tidak didukung dengan speech kami. 😭')
+}
 const chatbox = new Chatbox();
 chatbox.display();
