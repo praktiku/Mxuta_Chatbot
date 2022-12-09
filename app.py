@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from chat import get_response
+import nltk
+nltk.download('punkt')
 
 app = Flask(__name__)
 
@@ -21,7 +23,9 @@ def predict():
 @app.post("/record")
 def record():
     text = request.get_json().get("message")
-    response = {"answer": response}
+    response = get_response(text)
+    
+    message = {"answer": response}
 
     return jsonify(message), 200,  {'content-type': 'application/json'}
 

@@ -3,6 +3,9 @@ let tens = 0;
 let Interval;
 const appendSeconds = document.querySelector('#seconds');
 const appendTens = document.querySelector('#tens');
+const synth = window.speechSynthesis;
+let utter = new SpeechSynthesisUtterance();
+utter.lang = 'id-ID'
 
 
 class Chatbox {
@@ -79,11 +82,12 @@ class Chatbox {
           });
     }
     /** Recording */
-    recElement(){
-        if(this.record)
+    recElement(statement){
+        if(statement == true)
             setTimeout(() => {
                 this.timeOfRecording(true)
                 // document.querySelector('#speech').style.display = "none"
+
                 document.querySelector('#speech').innerHTML = "Stop.."
                 document.querySelector('#rec').style.display = "block"
                 document.querySelector('#timer').style.display = "block"
@@ -114,75 +118,54 @@ class Chatbox {
         let speechToText;
 
         if(this.record){
-            this.recElement()
+            this.recElement(true)
             recognition.start()
             /** Ambil Hasil Suara Yang Telah Di Rekam */
             recognition.onresult = (event) => {
-                
-                buttonSpeech.innerHTML = 'Start Speech'
-                
+                recognition.stop
                 speechToText = event.results[event.results.length - 1][0].transcript.trim();
-                console.log('Speech Request')
-                /** Msg yang telah direkam dan recognition */
+
                 let msg1 = { name: "User", message: speechToText }
                 this.messages.push(msg1);
-    
-                console.log(speechToText);
-                // recognition.stop()
+                this.fetchData(speechToText, chatbox) // Fetch data dan Ambil data
+                this.updateChatText(chatbox) // Update Text
+                this.recElement(false) // DOM 
             }
+            
         }else{
             this.recElement()
             recognition.stop
         }
-
-        // document.querySelector('#speech').innerHTML = "Waiting.."
-        // document.querySelector('input').style.display = "none"
         
-        // fetch('http://127.0.0.1:5000/record', {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: {message: speechToText},
-        //     method: 'POST',
-        //     mode: 'cors',
-        // })
-        // .then(r => r.json())
-        // .then(r => {
-        //     document.querySelector('#speech').style.display = "block"
-        //     document.querySelector('#rec').style.display = "none"
-        //     document.querySelector('input').style.display = "block"
-
-        //     document.querySelector('#speech').innerHTML = "Speech"
-           
-        //     let msg2 = { name: "Sam", message: r.answer };
-        //     this.messages.push(msg2);
-        //     this.updateChatText(chatbox)
-        //     textField.value = ''
-
-        //     this.synthOnProgress(r.answer)
-        //     console.log(r)
-
-        // }).catch((error) => {
-        //     // console.error('Error:', JSON.parse(error));
         
-        // });
     };
-     /** Function Suara Buatan */
-     synthOnProgress(speechMsg){
-        /** Suara Buatan */
-        console.log('synthOnProgress')
-        const synth = window.speechSynthesis;
-        let utter = new SpeechSynthesisUtterance();
-        utter.lang = 'id-ID'
-        utter.onend = () => {
-           console.log("utter onend")
-       }
-       setTimeout(() => {
-           utter.text = speechMsg
-           synth.speak(utter)
-       }, 500);
-       
-   }
+    fetchData(text, chatbox){
+        fetch('http://127.0.0.1:5000/record', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({message: text}),
+            method: 'POST',
+            mode: 'cors',
+        })
+        .then(r => r.json())
+        .then(r => {
+           
+            let msg2 = { name: "Sam", message: r.answer };
+            this.messages.push(msg2);
+            this.updateChatText(chatbox)
+
+            utter.text = r.answer;
+            synth.speak(utter)
+
+            textField.value = ''
+            
+            
+        }).catch((error) => {
+            // console.error('Error:', JSON.parse(error));
+        
+        });
+    }
    /**Count Recording Number */
     timeOfRecording(statement){
         if(statement == true){
