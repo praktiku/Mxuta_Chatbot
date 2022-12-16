@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 from chat import get_response
 import nltk
+from flask_cors import CORS
 nltk.download('punkt')
 
 app = Flask(__name__)
-
+CORS(app)
 
 @app.get("/")
 def index_get():
