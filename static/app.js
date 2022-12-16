@@ -155,7 +155,10 @@ class Chatbox {
             this.updateChatText(chatbox)
 
             utter.text = r.answer;
-            synth.speak(utter)
+            if(localStorage.getItem('speak')){
+                synth.speak(utter)
+            }
+            
 
             textField.value = ''
             
