@@ -143,7 +143,7 @@ class Chatbox {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({message: text}),
+            body: JSON.stringify({message: text.replace(".", "")}),
             method: 'POST',
             mode: 'cors',
         })
