@@ -69,7 +69,7 @@ class Chatbox {
           })
           .then(r => r.json())
           .then(r => {
-            let msg2 = { name: "Sam", message: r.answer };
+            let msg2 = { name: "Sam", message: r.answer.replace(/\n/g,"<br>") };
             this.messages.push(msg2);
             this.updateChatText(chatbox)
             textField.value = ''
